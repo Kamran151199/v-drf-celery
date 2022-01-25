@@ -1,0 +1,32 @@
+<html lang="en">
+{% include "../common/header.html" %}
+<body class="bg-gray-100">
+  <div class="my-8 flex flex-col font-serif h-screen gap-10 md:text-4xl text-xl">
+    <div class="text-center flex flex-col gap-4">
+      <p>
+        Hello <strong>{{ USERNAME }}</strong> !
+      </p>
+      <p>
+        We are happy to have you on board !!!
+      </p>
+    </div>
+    <div class="mx-10">
+      <p>
+        Please follow the link below to verify Your account!
+      </p>
+    </div>
+    <div class="mx-10">
+      <p>
+        Link: <a href="#" class="italic">{{ CLIENT_URL }}/users/verify/?verification-token={{ TOKEN }}&user={{ ID }}</a>
+      </p>
+    </div>
+    <div class="mx-10">
+      <p>
+        Yours best, <br/>
+        Examlify Team
+      </p>
+    </div>
+  </div>
+</body>
+
+</html>

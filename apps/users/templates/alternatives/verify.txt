@@ -1,0 +1,10 @@
+Hello {{ USERNAME }} !
+
+We are happy to have you on board !!!
+
+Please follow the link below to verify Your account!
+
+Link: {{ CLIENT_URL }}
+
+Yours best,
+Examlify Team
