@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "flower-service.fullname" . }}-test-connection"
+  labels:
+    {{- include "flower-service.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "flower-service.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
