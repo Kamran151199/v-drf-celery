@@ -12,7 +12,7 @@ DEBUG = bool(os.environ.get('DEVELOPMENT', True))
 
 # ******************************** HOST ACCESS **********************************************
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', '*').split(',')
+CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', 'https://*').split(',')
 CORS_ALLOW_ALL_ORIGINS = bool(os.environ.get('DEVELOPMENT', True))
 CORS_ALLOW_CREDENTIALS = bool(os.environ.get('CORS_ALLOW_CREDENTIALS', True))
 
@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'corsheaders',
 
     # CUSTOM
-    'apps.users'
-    'apps.computer'
+    'apps.users',
+    'apps.computer',
 ]
 
 # ******************************** MIDDLEWARE **********************************************
@@ -121,8 +121,6 @@ DATABASES = {
     }
 }
 
-DEFAULT_AUTO_FIELD = 'django.db.models.UUIDField'
-
 
 # ******************************** Authentication **********************************************
 AUTH_PASSWORD_VALIDATORS = [
@@ -140,8 +138,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = 'user.User'
-
+AUTH_USER_MODEL = 'users.User'
+EMAIL_VERIFICATION_REQUIRED = os.environ.get('EMAIL_VERIFICATION_REQUIRED', False)
 
 # ******************************** Internationalization **********************************************
 LANGUAGE_CODE = 'en-us'

@@ -13,9 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
             'last_name',
             'email',
             'password',
-            'profile',
             'phone_number',
-            'is_lecturer',
             'is_active',
             'is_staff',
             'is_verified',
@@ -23,7 +21,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True},
         }
-        read_only_fields = ('is_active', 'is_staff', 'profile', 'is_verified', 'id', 'profile')
+        read_only_fields = ('is_active', 'is_staff', 'profile', 'is_verified', 'id')
 
     def get_fields(self, *args, **kwargs):
         fields = super(UserSerializer, self).get_fields()
