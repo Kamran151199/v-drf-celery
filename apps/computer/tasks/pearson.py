@@ -25,6 +25,12 @@ def compute_pcorrelation(data, intersection_only=True) -> None:
         Values to compose the vectors and pass to correlation computer.
     """
 
+    # Get user
+    user_id = data.get('user_id')
+
+    # Leave only vector data
+    data = data.get('data')
+
     # Get vectors
     x_vector = data.get('x', [])
     y_vector = data.get('y', [])
@@ -47,6 +53,8 @@ def compute_pcorrelation(data, intersection_only=True) -> None:
          for x in x_vector for y in y_vector if x.get('date') == y.get('date')]
 
         # Pearson’s correlation coefficient and probability value.
+        if not (len(vec1) > 1 and len(vec2) > 1):
+            raise ValueError('[x] Vectors should have length greater than 1')
         value, p_value = stats.pearsonr(vec1, vec2)
 
     # Non-intersection mode will be implemented in the future
@@ -54,7 +62,7 @@ def compute_pcorrelation(data, intersection_only=True) -> None:
         raise NotImplementedError('[x] This functionality is to be implemented in the future')
 
     # Create data point.
-    data_instance = DataModel.objects.create(user_id=data.get('user_id'),
+    data_instance = DataModel.objects.create(user_id=user_id,
                                              x_data_type=data.get('x_data_type'),
                                              y_data_type=data.get('y_data_type'))
     # Create correlation.

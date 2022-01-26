@@ -1,20 +1,30 @@
-from abc import ABC
 from rest_framework import serializers
 
+from apps.computer.models import DataModel, PCorrelationModel
 
-class DataPointSerializer(serializers.Serializer, ABC):
+
+class DataPointSerializer(serializers.Serializer):
     date = serializers.DateField(allow_null=False)
     value = serializers.FloatField(allow_null=True)
 
 
-class DataSerializer(serializers.Serializer, ABC):
-    x_data_type = serializers.CharField(max_length=200)
-    y_data_type = serializers.CharField(max_length=200)
-    x = DataPointSerializer(many=True)
-    y = DataPointSerializer(many=True)
+class CorrelationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PCorrelationModel
+        exclude = ('data', )
 
 
-class PCorrelationRequestSerializer(serializers.Serializer, ABC):
+class DataSerializer(serializers.ModelSerializer):
+    x = DataPointSerializer(many=True, write_only=True)
+    y = DataPointSerializer(many=True, write_only=True)
+    correlations = CorrelationSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = DataModel
+        fields = '__all__'
+        read_only_fields = ('user', )
+
+
+class PCorrelationRequestSerializer(serializers.Serializer):
     user_id = serializers.UUIDField(allow_null=False)
-    data = DataSerializer(allow_null=False)
-
+    data = DataSerializer(allow_null=False, write_only=True)

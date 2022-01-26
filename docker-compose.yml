@@ -1,0 +1,77 @@
+version: '3.4'
+
+services:
+  demo-db:
+    hostname: demo-db
+    image: bitnami/postgresql:10
+    env_file:
+      - .env
+
+  demo-redis:
+    hostname: demo-redis
+    image: bitnami/redis:latest
+    command: /opt/bitnami/scripts/redis/run.sh --appendonly no
+    env_file:
+      - .env
+
+  demo-rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: demo-rabbitmq
+    env_file:
+      - .env
+
+  demo-celery-worker:
+    hostname: demo-celery-worker
+    build:
+      context: .
+      dockerfile: ./devops/docker/celery/Dockerfile
+    environment:
+      SERVICE_VARIANT: celery-worker
+    command: /bin/bash -c "celery -A helpers.background worker --loglevel ${CELERY_WORKER_LOGLEVEL}"
+    env_file:
+      - .env
+    depends_on:
+      - demo-db
+      - demo-app
+      - demo-redis
+    volumes:
+      - ./media:/app/media
+      - ./apps/:/app/apps
+      - ./static/:/app/static
+      - ./config/:/app/config
+      - ./helpers/:/app/helpers
+
+  demo-app:
+    container_name: demo-app
+    hostname: demo-app
+    build:
+      context: ./
+      dockerfile: devops/docker/app/Dockerfile
+    environment:
+      SERVICE_VARIANT: app
+      WSGI_NAME: wsgi
+    env_file:
+      - .env
+    depends_on:
+      - demo-db
+      - demo-redis
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./media:/app/media
+      - ./apps/:/app/apps
+      - ./static/:/app/static
+      - ./config/:/app/config
+      - ./helpers/:/app/helpers
+
+  demo-flower:
+    hostname: demo-flower
+    image: mher/flower
+    command: celery --broker=redis://:${REDIS_PASSWORD}@exam-redis:6379/2 flower --port=5555 --loglevel ${CELERY_BEAT_LOGLEVEL}
+    ports:
+      - "5555:5555"
+    depends_on:
+      - demo-db
+      - demo-app
+      - demo-redis
+      - demo-celery-worker

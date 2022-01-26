@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from config.settings import EMAIL_VERIFICATION_REQUIRED
 from .manager import CustomUserManager
 
 
@@ -20,7 +21,7 @@ class CustomUser(AbstractUser):
     is_staff = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
-    is_verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=not EMAIL_VERIFICATION_REQUIRED)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

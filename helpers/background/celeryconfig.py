@@ -1,7 +1,7 @@
 import os
 
-include = ['apps.user.tasks.email']  # Task modules
-imports = ['apps.user.tasks.email']
+include = ['apps.users.tasks.email', 'apps.computer.tasks.pearson']  # Task modules
+imports = ['apps.users.tasks.email', 'apps.computer.tasks.pearson']
 
 enable_utc = os.environ.get('CELERY_ENABLE_UTC', True)
 timezone = os.environ.get('CELERY_TIMEZONE', 'Europe/Berlin')
